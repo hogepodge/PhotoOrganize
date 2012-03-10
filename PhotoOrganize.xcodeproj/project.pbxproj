@@ -10,6 +10,7 @@
 		DCA877B5150B08CB00EF6CF2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA877B4150B08CB00EF6CF2 /* Foundation.framework */; };
 		DCA877B8150B08CB00EF6CF2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA877B7150B08CB00EF6CF2 /* main.m */; };
 		DCA877BC150B08CB00EF6CF2 /* PhotoOrganize.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */; };
+		DCA877C4150B0D1F00EF6CF2 /* PhotoOrganizer.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA877C3150B0D1F00EF6CF2 /* PhotoOrganizer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,8 +30,10 @@
 		DCA877B0150B08CB00EF6CF2 /* PhotoOrganize */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PhotoOrganize; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCA877B4150B08CB00EF6CF2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DCA877B7150B08CB00EF6CF2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		DCA877BA150B08CB00EF6CF2 /* PhotoOrganize-Prefix.pch */ = {isa = PBXFileReference; path = "PhotoOrganize-Prefix.pch"; sourceTree = "<group>"; };
+		DCA877BA150B08CB00EF6CF2 /* PhotoOrganize-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PhotoOrganize-Prefix.pch"; sourceTree = "<group>"; };
 		DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PhotoOrganize.1; sourceTree = "<group>"; };
+		DCA877C2150B0D1F00EF6CF2 /* PhotoOrganizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoOrganizer.h; sourceTree = "<group>"; };
+		DCA877C3150B0D1F00EF6CF2 /* PhotoOrganizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoOrganizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 			isa = PBXGroup;
 			children = (
 				DCA877B7150B08CB00EF6CF2 /* main.m */,
+				DCA877C2150B0D1F00EF6CF2 /* PhotoOrganizer.h */,
+				DCA877C3150B0D1F00EF6CF2 /* PhotoOrganizer.m */,
 				DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */,
 				DCA877B9150B08CB00EF6CF2 /* Supporting Files */,
 			);
@@ -140,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCA877B8150B08CB00EF6CF2 /* main.m in Sources */,
+				DCA877C4150B0D1F00EF6CF2 /* PhotoOrganizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
