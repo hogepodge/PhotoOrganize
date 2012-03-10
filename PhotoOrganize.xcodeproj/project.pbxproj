@@ -1,0 +1,237 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DCA877B5150B08CB00EF6CF2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA877B4150B08CB00EF6CF2 /* Foundation.framework */; };
+		DCA877B8150B08CB00EF6CF2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA877B7150B08CB00EF6CF2 /* main.m */; };
+		DCA877BC150B08CB00EF6CF2 /* PhotoOrganize.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DCA877AE150B08CB00EF6CF2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				DCA877BC150B08CB00EF6CF2 /* PhotoOrganize.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DCA877B0150B08CB00EF6CF2 /* PhotoOrganize */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PhotoOrganize; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCA877B4150B08CB00EF6CF2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		DCA877B7150B08CB00EF6CF2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DCA877BA150B08CB00EF6CF2 /* PhotoOrganize-Prefix.pch */ = {isa = PBXFileReference; path = "PhotoOrganize-Prefix.pch"; sourceTree = "<group>"; };
+		DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PhotoOrganize.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DCA877AD150B08CB00EF6CF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA877B5150B08CB00EF6CF2 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DCA877A5150B08C900EF6CF2 = {
+			isa = PBXGroup;
+			children = (
+				DCA877B6150B08CB00EF6CF2 /* PhotoOrganize */,
+				DCA877B3150B08CB00EF6CF2 /* Frameworks */,
+				DCA877B1150B08CB00EF6CF2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DCA877B1150B08CB00EF6CF2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCA877B0150B08CB00EF6CF2 /* PhotoOrganize */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCA877B3150B08CB00EF6CF2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DCA877B4150B08CB00EF6CF2 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCA877B6150B08CB00EF6CF2 /* PhotoOrganize */ = {
+			isa = PBXGroup;
+			children = (
+				DCA877B7150B08CB00EF6CF2 /* main.m */,
+				DCA877BB150B08CB00EF6CF2 /* PhotoOrganize.1 */,
+				DCA877B9150B08CB00EF6CF2 /* Supporting Files */,
+			);
+			path = PhotoOrganize;
+			sourceTree = "<group>";
+		};
+		DCA877B9150B08CB00EF6CF2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DCA877BA150B08CB00EF6CF2 /* PhotoOrganize-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DCA877AF150B08CB00EF6CF2 /* PhotoOrganize */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCA877BF150B08CB00EF6CF2 /* Build configuration list for PBXNativeTarget "PhotoOrganize" */;
+			buildPhases = (
+				DCA877AC150B08CB00EF6CF2 /* Sources */,
+				DCA877AD150B08CB00EF6CF2 /* Frameworks */,
+				DCA877AE150B08CB00EF6CF2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhotoOrganize;
+			productName = PhotoOrganize;
+			productReference = DCA877B0150B08CB00EF6CF2 /* PhotoOrganize */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DCA877A7150B08CA00EF6CF2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "University of Oregon Neuroinformatics Center";
+			};
+			buildConfigurationList = DCA877AA150B08CA00EF6CF2 /* Build configuration list for PBXProject "PhotoOrganize" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = DCA877A5150B08C900EF6CF2;
+			productRefGroup = DCA877B1150B08CB00EF6CF2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCA877AF150B08CB00EF6CF2 /* PhotoOrganize */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DCA877AC150B08CB00EF6CF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA877B8150B08CB00EF6CF2 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		DCA877BD150B08CB00EF6CF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		DCA877BE150B08CB00EF6CF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DCA877C0150B08CB00EF6CF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PhotoOrganize/PhotoOrganize-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DCA877C1150B08CB00EF6CF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PhotoOrganize/PhotoOrganize-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DCA877AA150B08CA00EF6CF2 /* Build configuration list for PBXProject "PhotoOrganize" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCA877BD150B08CB00EF6CF2 /* Debug */,
+				DCA877BE150B08CB00EF6CF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCA877BF150B08CB00EF6CF2 /* Build configuration list for PBXNativeTarget "PhotoOrganize" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCA877C0150B08CB00EF6CF2 /* Debug */,
+				DCA877C1150B08CB00EF6CF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DCA877A7150B08CA00EF6CF2 /* Project object */;
+}
