@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PhotoOrganizer.h"
 
 int main(int argc, const char * argv[])
 {
@@ -15,6 +16,21 @@ int main(int argc, const char * argv[])
         
         // insert code here...
         NSLog(@"Hello, World!");
+        if (argc != 3) {
+            NSLog(@"Usage: PhotoOrganize <source> <target>");
+            return 1;
+        }
+        
+        NSString* source = [[NSString alloc] initWithUTF8String:argv[1]];
+        NSString* target = [[NSString alloc] initWithUTF8String:argv[2]];
+        
+        NSLog(@"%@", source);
+        NSLog(@"%@", target);
+        
+        PhotoOrganizer* organizer = [[PhotoOrganizer alloc] initWithSource:source target:target];
+        
+        while ([organizer step]) {
+        }
         
     }
     return 0;

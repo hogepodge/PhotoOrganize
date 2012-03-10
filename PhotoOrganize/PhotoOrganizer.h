@@ -9,5 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface PhotoOrganizer : NSObject
+{
+    NSString* sourceDirectory;
+    NSString* targetDirectory;
+    
+    NSFileManager* fileManager;
+    NSDirectoryEnumerator* enumerator;
+    
+}
+
+-(id)init;
+-(id)initWithSource:(NSString*)source target:(NSString*)target;
+-(BOOL)step;
 
 @end
