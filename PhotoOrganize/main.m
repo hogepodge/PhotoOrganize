@@ -12,8 +12,6 @@
 int main(int argc, const char * argv[])
 {
 
-    @autoreleasepool {
-        
         // insert code here...
         NSLog(@"Hello, World!");
         if (argc != 3) {
@@ -30,9 +28,12 @@ int main(int argc, const char * argv[])
         PhotoOrganizer* organizer = [[PhotoOrganizer alloc] initWithSource:source target:target];
         
         while ([organizer step]) {
+
         }
+    
+    [source release];
+    [target release];
         
-    }
     return 0;
 }
 
