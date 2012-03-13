@@ -23,6 +23,7 @@
 
     return self;
 }
+
 -(id)initWithSource:(NSString*)source target:(NSString*)target
 {
     self = [super init];
@@ -47,7 +48,14 @@
                 exit(1);
             }
         } else {
+            NSError* error;
             NSLog(@"Target does not exist.");
+            [fileManager createDirectoryAtPath:target withIntermediateDirectories:TRUE attributes:nil error:&error];
+            if ([fileManager fileExistsAtPath:target isDirectory:&directory]) {
+                NSLog(@"Target created: %@.", target);
+            } else {
+                NSLog(@"Target failed to be created: %@",target);
+            }
         }
         sourceDirectory = source;
         targetDirectory = target;
@@ -64,10 +72,15 @@
     {
         NSAutoreleasePool *loopPool = [[NSAutoreleasePool alloc] init];
         NSString* longFile = [NSString stringWithFormat:@"%@%@", sourceDirectory, file];
-        NSDictionary* metadata = [PhotoOrganizer imageMetadata:longFile];
+        NSDictionary* metadata = [self imageMetadata:longFile];
         if (metadata) {
-            NSLog(@"You have metadata");
-            NSLog(@"%@", metadata);
+            NSString* md5 = [metadata objectForKey:@"md5"];
+            if ([imageDictionary objectForKey:md5]) {
+                NSLog(@"Found Duplicate image.");
+            } else {
+                [imageDictionary setObject:metadata forKey:md5];
+                NSLog(@"Inserted image: %@", md5);
+            }
         }
         [loopPool drain];
         return TRUE;
@@ -80,7 +93,7 @@
     NSString* md5 = NULL;
 
     if (data) {
-        NSLog(@"computing");
+
         md5 = [data MD5];
     } else {
         NSLog(@"Bad data.");
@@ -88,8 +101,9 @@
     return md5;
 }
 
-+(NSDictionary*)imageMetadata:(NSString*) file
+-(NSDictionary*)imageMetadata:(NSString*) file
 {
+    file = [file stringByStandardizingPath];
     NSDictionary* imageMetadata = nil;
     NSString* imageType = [PhotoOrganizer identifyType:file];
     if (imageType) {
@@ -97,16 +111,22 @@
 
         NSString* md5 = [PhotoOrganizer computeHash:imageData];
         NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:imageData];
+        
+        NSDictionary* exif = [rep valueForProperty:NSImageEXIFData];
+
+        
+        NSError* error;
+        NSDictionary* attributes = [fileManager attributesOfItemAtPath:file error:&error];
                 
-        NSLog(@"metadata dict");
         imageMetadata = [[NSDictionary alloc] initWithObjectsAndKeys:
                          md5, @"md5", 
                          [NSNumber numberWithUnsignedInt:[rep pixelsWide]], @"width", 
                          [NSNumber numberWithUnsignedInt:[rep pixelsHigh]], @"height",
                          file, @"location",
+                         exif, @"exif",
+                         attributes, @"attributes",
                          nil];
         
-        NSLog(@"okdone");
         [imageMetadata autorelease];
     }
 

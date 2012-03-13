@@ -25,6 +25,6 @@
 -(BOOL)step;
 +(NSString*)computeHash:(NSData*)data;
 +(NSString*)identifyType:(NSString*)file;
-+(NSDictionary*)imageMetadata:(NSString*)file;
+-(NSDictionary*)imageMetadata:(NSString*)file;
 
 @end
