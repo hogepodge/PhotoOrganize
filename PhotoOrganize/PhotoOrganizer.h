@@ -18,13 +18,17 @@
     
     NSMutableDictionary* imageDictionary;
     
+    NSString* timezone;
+    NSDateFormatter* fileFormatter;
+    NSDateFormatter* directoryFormatter;
 }
 
 -(id)init;
 -(id)initWithSource:(NSString*)source target:(NSString*)target;
 -(BOOL)step;
 +(NSString*)computeHash:(NSData*)data;
-+(NSString*)identifyType:(NSString*)file;
++(NSString*)identifyCategory:(NSString*)file;
 -(NSDictionary*)imageMetadata:(NSString*)file;
+-(BOOL)insertImage:(NSDictionary*)imageData;
 
 @end
