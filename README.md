@@ -10,10 +10,10 @@ to modify the progam to fit your particular needs.
 
 ## Usage
 
-'''PhotoOrganize <source> <target>'''
+```PhotoOrganize <source> <target>```
 
-'<source>' is the directory you want to start searching in. The software recursively descends to find every photo.
-'<target>' is the directory you want to copy all of your files to. Make sure you have enough space. Depending upon
+`<source>` is the directory you want to start searching in. The software recursively descends to find every photo.
+`<target>` is the directory you want to copy all of your files to. Make sure you have enough space. Depending upon
 how large your archive is, this may take a long time to complete.
 
 ## Changelog
