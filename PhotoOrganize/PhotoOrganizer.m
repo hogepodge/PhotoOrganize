@@ -45,8 +45,7 @@
             exit(1);
         }
         if ([fileManager fileExistsAtPath:target isDirectory:&directory]) {
-            NSLog(@"Target exists: %@\nExiting.", target);
-            exit(1);
+            NSLog(@"Target exists: %@\n.", target);
         } else {
             NSError* error;
             NSLog(@"Target does not exist.");
@@ -108,11 +107,8 @@
 
 -(BOOL)createTargetDirectory:(NSDictionary *)imageData
 {
-    NSDictionary* exif = [imageData objectForKey:@"exif"];
     NSString* fileCategory = [imageData objectForKey:@"imageCategory"];
-    NSString* dateString = [exif objectForKey:@"DateTimeOriginal"];
-    dateString = [NSString stringWithFormat:@"%@ %@", dateString, timezone];
-    NSDate* date = [[NSDate alloc] initWithString:dateString];   
+    NSDate* date = [imageData objectForKey:@"date"];
     
     NSString* target = [[NSString alloc] initWithFormat:@"%@/%@/%@",
                         targetDirectory,
@@ -122,6 +118,7 @@
     BOOL directory;
     if (![fileManager fileExistsAtPath:target isDirectory:&directory]) {
         [fileManager createDirectoryAtPath:target withIntermediateDirectories:TRUE attributes:nil error:nil];
+        NSLog(@"Created %@", target);
     }
     [target autorelease];
     [date release];
@@ -132,24 +129,19 @@
 
 -(NSString*)fileName:(NSDictionary *)imageData
 {
-    NSDictionary* exif = [imageData objectForKey:@"exif"];
-    NSString* fileType = [imageData objectForKey:@"imageType"];
-    NSString* fileCategory = [imageData objectForKey:@"imageCategory"];
+    NSString*  imageType = [imageData objectForKey:@"imageType"];
+    NSString* imageCategory = [imageData objectForKey:@"imageCategory"];
     NSString* md5 = [imageData objectForKey:@"md5"];
-    NSString* dateString = [exif objectForKey:@"DateTimeOriginal"];
-    dateString = [NSString stringWithFormat:@"%@ %@", dateString, timezone];
-    NSDate* date = [[NSDate alloc] initWithString:dateString];   
-    
-    
+	NSDate* date = [imageData objectForKey:@"date"];
+        
     NSString* target = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@-%@.%@",
                         targetDirectory,
-                        fileCategory,
+                        imageCategory,
                         [directoryFormatter stringFromDate:date],
                         [fileFormatter stringFromDate:date],
-                        [md5 substringToIndex:4],
-                        fileType];
+                        [md5 substringToIndex:5],
+                        imageType];
     [target autorelease];
-    [date release];
     return target;
 }
 
@@ -174,7 +166,6 @@
     NSString* md5 = NULL;
 
     if (data) {
-
         md5 = [data MD5];
     } else {
         NSLog(@"Bad data.");
@@ -192,47 +183,71 @@
     NSString* imageCategory = [PhotoOrganizer identifyCategory:file];
     if (imageCategory) 
     {
-        NSLog(@"%@", file);
-        NSData* imageData = [NSData dataWithContentsOfFile:file];
-        if (imageData)
-        {
-            NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:imageData];
-            if (rep)
-            {
-                NSString* md5 = [PhotoOrganizer computeHash:imageData];
-                NSDictionary* exif = [rep valueForProperty:NSImageEXIFData];
+		NSData* imageData = [NSData dataWithContentsOfFile:file];
+		if (imageData) {			
+			NSString* md5 = [PhotoOrganizer computeHash:imageData];
+			if ([imageCategory caseInsensitiveCompare:@"dng"] == NSOrderedSame ) {
+				NSError* error;
+				NSDictionary* dict = [fileManager attributesOfItemAtPath:file error:&error];
+				NSDate* date = [dict objectForKey:@"NSFileCreationDate"];
+				imageMetadata = [[NSDictionary alloc] initWithObjectsAndKeys:
+								 md5, @"md5",
+								 file, @"location",
+								 imageCategory, @"imageCategory",
+								 @"dng", @"imageType",
+								 date, @"date",
+								 nil];
+				[imageMetadata autorelease];
+			} else {
+				NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:imageData];
+				if (rep) {
+					unsigned long width = [rep pixelsWide];
+					unsigned long height = [rep pixelsHigh];
+					if ((width < 480 || height < 480) &&
+						[imageCategory compare:@"raw"] != NSOrderedSame) // raw may lie through thumbnail
+					{
+						NSLog(@"Image smaller than 480 pixels on one edge. Skipping: %@", file);
+					} else {
+						NSDictionary* exif = [rep valueForProperty:NSImageEXIFData];
                 
-                NSError* error;
-                if (!exif) {
-                    NSDictionary* dict = [fileManager attributesOfItemAtPath:file error:&error];
-                    NSString* date = [dict objectForKey:@"NSFileCreationDate"];
-                    exif = [[NSDictionary alloc] initWithObjectsAndKeys: 
-                            date, @"DateTimeOriginal", nil];
-                    [exif autorelease];
-                }
+						NSError* error;
+						NSDate* date;
+						
+						if (!exif) {
+							NSDictionary* dict = [fileManager attributesOfItemAtPath:file error:&error];
+							date = [dict objectForKey:@"NSFileCreationDate"];
+						} else {
+							NSString* dateString = [exif objectForKey:@"DateTimeOriginal"];
+							dateString = [NSString stringWithFormat:@"%@ %@", dateString, timezone];
+							date = [[NSDate alloc] initWithString:dateString]; 
+							[date autorelease];
+						}
+                        
+                        if (!date) {
+							NSDictionary* dict = [fileManager attributesOfItemAtPath:file error:&error];
+							date = [dict objectForKey:@"NSFileCreationDate"];                            
+                        }
+						
+						NSString* imageType = [file pathExtension];
         
- 
-                NSDictionary* attributes = [fileManager attributesOfItemAtPath:file error:&error];
-                
-                imageMetadata = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                 md5, @"md5", 
-                                 [NSNumber numberWithUnsignedInt:[rep pixelsWide]], @"width", 
-                                 [NSNumber numberWithUnsignedInt:[rep pixelsHigh]], @"height",
-                                 file, @"location",
-                                 exif, @"exif",
-                                 attributes, @"attributes",
-                                 imageCategory, @"imageCategory",
-                                 [file pathExtension], @"imageType",
-                                 nil];
-                [imageMetadata autorelease];
-            } else {
-                NSLog(@"Image read error: %@", file);
-            }
-        } else {
-            NSLog(@"Data read error: %@", file);
-        }
-    }
-    return imageMetadata;
+						imageMetadata = [[NSDictionary alloc] initWithObjectsAndKeys:
+										 md5, @"md5", 
+										 file, @"location",
+										 imageCategory, @"imageCategory",
+										 imageType, @"imageType",
+										 date, @"date",
+										 nil];
+						[imageMetadata autorelease];
+					}
+				} else {
+					NSLog(@"Image read error: %@", file);
+				}
+			}
+		} else {
+			NSLog(@"Data read error: %@", file);
+		}
+	}
+	return imageMetadata;
 }
 
 
@@ -244,8 +259,7 @@
         return @"jpg";
     } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"orf"] ||
                NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"nef"] ||
-               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"cr2"] ||
-               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"dng"])
+               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"cr2"])
     {
         return @"raw";
     } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"tiff"] ||
@@ -255,11 +269,13 @@
     } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"psd"]) 
     {
         return @"psd";
-    } else {
+    } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"dng"]) 
+	{
+		return @"dng";
+	} else
+	{
         return NULL;
     }
 }
-
-
 
 @end

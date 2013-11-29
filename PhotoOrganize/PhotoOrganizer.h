@@ -30,5 +30,8 @@
 +(NSString*)identifyCategory:(NSString*)file;
 -(NSDictionary*)imageMetadata:(NSString*)file;
 -(BOOL)insertImage:(NSDictionary*)imageData;
+-(BOOL)createTargetDirectory:(NSDictionary *)imageData;
+-(NSString*)fileName:(NSDictionary *)imageData;
 
 @end
+
