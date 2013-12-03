@@ -10,11 +10,14 @@
 
 @interface PhotoOrganizer : NSObject
 {
-    NSString* sourceDirectory;
+    NSMutableArray* sourceDirectories;
     NSString* targetDirectory;
     
-    NSFileManager* fileManager;
+    int currentSource;
     NSDirectoryEnumerator* enumerator;
+    
+    NSFileManager* fileManager;
+
     
     NSMutableDictionary* imageDictionary;
     
@@ -24,7 +27,7 @@
 }
 
 -(id)init;
--(id)initWithSource:(NSString*)source target:(NSString*)target;
+-(id)initWithSources:(NSMutableArray*)sources target:(NSString*)target;
 -(BOOL)step;
 +(NSString*)computeHash:(NSData*)data;
 +(NSString*)identifyCategory:(NSString*)file;

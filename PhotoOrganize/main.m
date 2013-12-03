@@ -11,29 +11,29 @@
 
 int main(int argc, const char * argv[])
 {
-
-        // insert code here...
-        NSLog(@"Hello, World!");
-        if (argc != 3) {
-            NSLog(@"Usage: PhotoOrganize <source> <target>");
-            return 1;
-        }
-        
-        NSString* source = [[NSString alloc] initWithUTF8String:argv[1]];
-        NSString* target = [[NSString alloc] initWithUTF8String:argv[2]];
-        
-        NSLog(@"%@", source);
-        NSLog(@"%@", target);
-        
-        PhotoOrganizer* organizer = [[PhotoOrganizer alloc] initWithSource:source target:target];
-        
-        while ([organizer step]) {
-
-        }
+    if (argc < 3) {
+        NSLog(@"Usage: PhotoOrganize <source1> ... <sourceN> <target>");
+        return 1;
+    }
     
-    [source release];
+    NSMutableArray *sources = [[NSMutableArray alloc] init];
+    for (size_t i = 0; i < (argc-2); ++i) {
+        NSString* source = [[NSString alloc] initWithUTF8String:argv[i+1]];
+        [sources insertObject:source atIndex:i];
+    }
+    
+    NSString* target = [[NSString alloc] initWithUTF8String:argv[argc-1]];
+    
+    NSLog(@"%@", sources);
+    NSLog(@"%@", target);
+    
+    PhotoOrganizer* organizer = [[PhotoOrganizer alloc] initWithSources:sources target:target];
+    
+    while ([organizer step]) {
+    }
+    
+    [sources release];
     [target release];
-        
+    
     return 0;
 }
-

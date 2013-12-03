@@ -24,30 +24,38 @@
     return self;
 }
 
--(id)initWithSource:(NSString*)source target:(NSString*)target
+-(id)initWithSources:(NSMutableArray*)sources target:(NSString*)target
 {
     self = [super init];
     if (self) {
         BOOL directory;
         fileManager = [NSFileManager defaultManager];
-        if ([fileManager fileExistsAtPath:source isDirectory:&directory] == YES)
-        {
-            NSLog(@"Source exists: %@", source);
-            if (directory) {
-                NSLog(@"Source is a directory.");
-                enumerator = [fileManager enumeratorAtPath:source];
+        
+        // Validate the sources
+        for (size_t i = 0; i < [sources count]; ++i) {
+            NSString* source = [sources objectAtIndex:i];
+            
+            if ([fileManager fileExistsAtPath:source isDirectory:&directory] == YES)
+            {
+                NSLog(@"Source exists: %@", source);
+                if (directory) {
+                    NSLog(@"Source is a directory.");
+                    
+                } else {
+                    NSLog(@"Source is not a directory. Exiting.");
+                    exit(1);
+                }
             } else {
-                NSLog(@"Source is not a directory. Exiting.");
+                NSLog(@"Source does not exist: %@\nExiting.", source);
                 exit(1);
             }
-        } else {
-            NSLog(@"Source does not exist: %@\nExiting.", source);
-            exit(1);
         }
+        
+        // Validate and create the target
         if ([fileManager fileExistsAtPath:target isDirectory:&directory]) {
             NSLog(@"Target exists: %@\n.", target);
         } else {
-            NSError* error;
+                NSError* error;
             NSLog(@"Target does not exist.");
             [fileManager createDirectoryAtPath:target withIntermediateDirectories:TRUE attributes:nil error:&error];
             if ([fileManager fileExistsAtPath:target isDirectory:&directory]) {
@@ -56,9 +64,11 @@
                 NSLog(@"Failed to create target: %@\nExiting.",target);
             }
         }
-        sourceDirectory = source;
+        
+        sourceDirectories = sources;
         targetDirectory = [target stringByStandardizingPath];
         NSLog(@"%@", targetDirectory);
+        
         imageDictionary = [[NSMutableDictionary alloc] initWithCapacity:1000];
         NSDate* now = [[NSDate alloc] init];
         NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
@@ -69,28 +79,34 @@
         
         fileFormatter = [[NSDateFormatter alloc] init];
         [fileFormatter setLocale:locale];
-        [fileFormatter setDateFormat:@"yyyyMMddHHmmss"];
+        [fileFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
         
         directoryFormatter = [[NSDateFormatter alloc] init];
         [directoryFormatter setLocale:locale];
-        [directoryFormatter setDateFormat:@"yyyy/MM/dd"];
+        [directoryFormatter setDateFormat:@"yyyy/MM"];
         
         NSLog(@"%@", timezone);
 
         [locale release];        
 
     }
-
+    
+    currentSource = 0;
+    enumerator = [fileManager enumeratorAtPath:[sources objectAtIndex:currentSource]];
+    
     return self;
 }
+
+
 
 -(BOOL)step
 {
     NSString* file = [enumerator nextObject];
     if (file) 
     {
+        NSString* sourceDirectory = [sourceDirectories objectAtIndex:currentSource];
         NSAutoreleasePool *loopPool = [[NSAutoreleasePool alloc] init];
-        NSString* longFile = [NSString stringWithFormat:@"%@%@", sourceDirectory, file];
+        NSString* longFile = [NSString stringWithFormat:@"%@/%@", sourceDirectory, file];
         NSDictionary* metadata = [self imageMetadata:longFile];
         if ([self insertImage:metadata])
         {
@@ -101,8 +117,15 @@
         }
         [loopPool drain];
         return TRUE;
-    } 
-    return FALSE;
+    } else {
+        ++currentSource;
+        if (currentSource == [sourceDirectories count]) {
+            return FALSE;
+        } else {
+            enumerator = [fileManager enumeratorAtPath: [sourceDirectories objectAtIndex:currentSource]];
+            return [self step];
+        }
+    }
 }
 
 -(BOOL)createTargetDirectory:(NSDictionary *)imageData
@@ -134,7 +157,7 @@
     NSString* md5 = [imageData objectForKey:@"md5"];
 	NSDate* date = [imageData objectForKey:@"date"];
         
-    NSString* target = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@-%@.%@",
+    NSString* target = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@_%@.%@",
                         targetDirectory,
                         imageCategory,
                         [directoryFormatter stringFromDate:date],
@@ -179,11 +202,14 @@
 -(NSDictionary*)imageMetadata:(NSString*) file
 {
     file = [file stringByStandardizingPath];
+    NSLog(@"%@", file);
     NSDictionary* imageMetadata = nil;
     NSString* imageCategory = [PhotoOrganizer identifyCategory:file];
+    NSError* error;
     if (imageCategory) 
     {
-		NSData* imageData = [NSData dataWithContentsOfFile:file];
+        
+		NSData* imageData = [NSData dataWithContentsOfFile:file options:0 error:&error];
 		if (imageData) {			
 			NSString* md5 = [PhotoOrganizer computeHash:imageData];
 			if ([imageCategory caseInsensitiveCompare:@"dng"] == NSOrderedSame ) {
@@ -203,11 +229,12 @@
 				if (rep) {
 					unsigned long width = [rep pixelsWide];
 					unsigned long height = [rep pixelsHigh];
-					if ((width < 480 || height < 480) &&
+					if ((width < 1025 || height < 1025) &&
 						[imageCategory compare:@"raw"] != NSOrderedSame) // raw may lie through thumbnail
 					{
-						NSLog(@"Image smaller than 480 pixels on one edge. Skipping: %@", file);
+						NSLog(@"Image smaller than 1024 pixels on one edge. Skipping: %@", file);
 					} else {
+                        // TODO: ARW Fails. Fix.
 						NSDictionary* exif = [rep valueForProperty:NSImageEXIFData];
                 
 						NSError* error;
@@ -244,7 +271,7 @@
 				}
 			}
 		} else {
-			NSLog(@"Data read error: %@", file);
+			NSLog(@"Data read error: %@ %@", file, error);
 		}
 	}
 	return imageMetadata;
@@ -257,9 +284,13 @@
         NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"jpeg"])
     {
         return @"jpg";
+/*    } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"jp2"]) {
+        return @"jp2";*/
     } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"orf"] ||
                NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"nef"] ||
-               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"cr2"])
+               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"cr2"] ||
+               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"arw"] ||
+               NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"raf"])
     {
         return @"raw";
     } else if (NSOrderedSame == [[file pathExtension] caseInsensitiveCompare:@"tiff"] ||
