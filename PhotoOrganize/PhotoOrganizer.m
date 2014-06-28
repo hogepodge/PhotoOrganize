@@ -226,15 +226,17 @@
 				[imageMetadata autorelease];
 			} else {
 				NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:imageData];
-				if (rep) {
+				if (rep ||
+                    [imageCategory compare:@"raw"] == NSOrderedSame) // raw may fail to load cleanly
+                {
 					unsigned long width = [rep pixelsWide];
 					unsigned long height = [rep pixelsHigh];
 					if ((width < 1025 || height < 1025) &&
-						[imageCategory compare:@"raw"] != NSOrderedSame) // raw may lie through thumbnail
+						([imageCategory compare:@"raw"] != NSOrderedSame) &&
+                        ([imageCategory compare:@"arw"] != NSOrderedSame)) // raw may lie through thumbnail
 					{
 						NSLog(@"Image smaller than 1024 pixels on one edge. Skipping: %@", file);
 					} else {
-                        // TODO: ARW Fails. Fix.
 						NSDictionary* exif = [rep valueForProperty:NSImageEXIFData];
                 
 						NSError* error;
